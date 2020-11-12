@@ -1,65 +1,38 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import axios from 'axios';
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/index.css'
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+import {
+    Card, CardImg, CardTitle, CardSubtitle, 
+  } from 'reactstrap';
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+function Index({dados}) {
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+    return (
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className="card-wrapper">            
+                {dados.produtos.slice(0,4).map(produto => (
+                    <Card className="card">
+                    <CardImg  classname="img-card"src={produto.imagem} alt="Card image cap" />
+                        <CardTitle tag="h5">{produto.nome}</CardTitle>
+                        <CardSubtitle tag="h6" className="mb-2 text-muted">{produto.categoria}</CardSubtitle>
+                        <CardSubtitle tag="h6" className="mb-2 text-muted">{produto.fornecedor}</CardSubtitle>
+                    </Card>
+                ))}        
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+       
+    )
 }
+
+Index.getInitialProps = async () =>{
+    const response = await axios.get(
+        'https://vitrine.alimentodeorigem.com.br/api/inicio'
+    );
+
+    return { dados:  response.data}
+};
+
+export default Index;
